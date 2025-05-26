@@ -86,3 +86,86 @@ Review Schema:
 | comment | String   | ❌        | Text review           |
 
 
+🔐 Authentication
+➕ Signup
+
+curl -X POST http://localhost:5000/signup \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "Alice",
+  "email": "alice@example.com",
+  "password": "password123",
+  "role": "admin"
+}'
+
+Login:
+
+curl -X POST http://localhost:5000/login \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "alice@example.com",
+  "password": "password123"
+}'
+
+
+📚 Books
+📘 Add Book (Admin Only)
+
+curl -X POST http://localhost:5000/v1/book \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-H "Content-Type: application/json" \
+-d '{
+  "title": "Atomic Habits",
+  "author": "James Clear",
+  "genre": "Self-Help",
+  "description": "An Easy & Proven Way to Build Good Habits",
+  "publishedYear": 2018
+}'
+
+Get All Books (with Pagination, Search, Sorting)
+
+curl -X GET "http://localhost:5000/v1/book?pageIndex=1&pageSize=5&search=harry&sort[key]=title&sort[order]=asc"
+
+📌 Explanation:
+
+pageIndex=1: Fetch the first page
+
+pageSize=5: Return 5 books per page
+
+search=harry: Search books with "harry" in title, author, or genre
+
+sort[key]=title: Sort by the title
+
+sort[order]=asc: Sort in ascending order
+
+
+📗 Get Book by ID
+
+curl -X GET http://localhost:5000/v1/book/<BOOK_ID>
+
+🌟 Reviews
+➕ Add Review to Book
+
+curl -X POST http://localhost:5000/v1/review/add/<BOOK_ID> \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <JWT_TOKEN>" \
+-d '{
+  "rating": 5,
+  "comment": "Amazing book! Highly recommended."
+}'
+
+✏️ Update Your Review
+
+curl -X PUT http://localhost:5000/v1/review/update/<REVIEW_ID> \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <JWT_TOKEN>" \
+-d '{
+  "rating": 4,
+  "comment": "Updated review: Still great, but noticed a few flaws."
+}'
+
+
+❌ Delete Your Review
+curl -X DELETE http://localhost:5000/v1/review/delete/<REVIEW_ID> \
+-H "Authorization: Bearer <JWT_TOKEN>"
+
